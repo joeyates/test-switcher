@@ -18,6 +18,117 @@
         "title": "Switch between test and implementation files"
       }
     ],
+    "configuration": {
+      "type": "object",
+      "title": "Test Switcher",
+      "properties": {
+        "TestSwitcher.knownLanguages": {
+          "type": "array",
+          "default": [
+            "elixir",
+            "ruby",
+            "typescript"
+          ],
+          "description": "A list of languages for which Test Switcher knows how to switch between test and implementation files"
+        },
+        "TestSwitcher.elixir.implementationMatcher": {
+          "type": "string",
+          "default": "lib\\/(.*?)\\.ex$",
+          "description": [
+            "A regular expression to match Elixir implementation files.",
+            "It's captures must match those in implementationReplacer"
+          ]
+        },
+        "TestSwitcher.elixir.implementationReplacer": {
+          "type": "string",
+          "default": "test/$1_test.exs",
+          "description": [
+            "A string to replace the captures from TestSwitcher.elixir.implementationMatcher",
+            "to get the test file"
+          ]
+        },
+        "TestSwitcher.elixir.testMatcher": {
+          "type": "string",
+          "default": "test\\/(.*?)_test\\.exs$",
+          "description": [
+            "A regular expression to match the test file",
+            "It's captures must match those in testReplacer"
+          ]
+        },
+        "TestSwitcher.elixir.testReplacer": {
+          "type": "string",
+          "default": "lib/$1.ex",
+          "description": [
+            "A string to replace the captures from testMatcher",
+            "to get the implementation file"
+          ]
+        },
+        "TestSwitcher.ruby.implementationMatcher": {
+          "type": "string",
+          "default": "lib\\/(.*?)\\.rb$",
+          "description": [
+            "A regular expression to match Ruby implementation files.",
+            "It's captures must match those in implementationReplacer"
+          ]
+        },
+        "TestSwitcher.ruby.implementationReplacer": {
+          "type": "string",
+          "default": "test/$1_test.rb",
+          "description": [
+            "A string to replace the captures from implementationMatcher",
+            "to get the test file"
+          ]
+        },
+        "TestSwitcher.ruby.testMatcher": {
+          "type": "string",
+          "default": "test/(.*)_test\\.rb$",
+          "description": [
+            "A regular expression to match the test file",
+            "It's captures must match those in testReplacer"
+          ]
+        },
+        "TestSwitcher.ruby.testReplacer": {
+          "type": "string",
+          "default": "lib/$1.rb",
+          "description": [
+            "A string to replace the captures from testMatcher",
+            "to get the implementation file"
+          ]
+        },
+        "TestSwitcher.typescript.implementationMatcher": {
+          "type": "string",
+          "default": "(.*?)\\/([^\\/]+)\\.ts$",
+          "description": [
+            "A regular expression to match Typescript implementation files.",
+            "It's captures must match those in implementationReplacer"
+          ]
+        },
+        "TestSwitcher.typescript.implementationReplacer": {
+          "type": "string",
+          "default": "$1/test/$2.test.ts",
+          "description": [
+            "A string to replace the captures from implementationMatcher",
+            "to get the test file"
+          ]
+        },
+        "TestSwitcher.typescript.testMatcher": {
+          "type": "string",
+          "default": "test\\/(.*?)\\.test\\.ts$",
+          "description": [
+            "A regular expression to match Typescript test files.",
+            "It's captures must match those in testReplacer"
+          ]
+        },
+        "TestSwitcher.typescript.testReplacer": {
+          "type": "string",
+          "default": "$1.ts",
+          "description": [
+            "A string to replace the captures from testMatcher",
+            "to get the implementation file"
+          ]
+        }
+      }
+    },
     "keybindings": [
       {
         "command": "extension.test-switcher.switch",
@@ -36,14 +147,16 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.87.0",
+    "@types/expect.js": "^0.3.32",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.87.0",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3",
     "@vscode/test-cli": "^0.0.6",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.56.0",
+    "expect.js": "^0.3.1",
+    "typescript": "^5.3.3"
   }
 }
