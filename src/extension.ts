@@ -1,18 +1,14 @@
 import * as vscode from 'vscode'
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Congratulations, your extension "test-switcher" is now active!')
-
-  let disposable = vscode.commands.registerCommand(
-    'test-switcher.helloWorld',
+  const toggleCommand = vscode.commands.registerCommand(
+    'extension.test-switcher.switch',
     () => {
-      // The code you place here will be executed every time your command is executed
-      // Display a message box to the user
-      vscode.window.showInformationMessage('Hello World from Test Switcher!')
+      vscode.window.showInformationMessage('Test Switcher active!')
     }
   )
 
-  context.subscriptions.push(disposable)
+  context.subscriptions.push(toggleCommand)
 }
 
 export function deactivate() {}

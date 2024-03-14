@@ -14,8 +14,16 @@
   "contributes": {
     "commands": [
       {
-        "command": "test-switcher.helloWorld",
-        "title": "Hello World"
+        "command": "extension.test-switcher.switch",
+        "title": "Switch between test and implementation files"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "extension.test-switcher.switch",
+        "key": "ctrl+`",
+        "mac": "cmd+`",
+        "when": "editorTextFocus"
       }
     ]
   },
