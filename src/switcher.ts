@@ -17,10 +17,15 @@ class Switcher {
    * The path to an implementation or test file
    */
   path: string
+  /**
+   * The VS Code workspace configuration
+   */
+  #configuration: vscode.WorkspaceConfiguration
 
-  constructor(languageId: string, path: string) {
+  constructor(languageId: string, path: string, configuration: vscode.WorkspaceConfiguration) {
     this.languageId = languageId
     this.path = path
+    this.#configuration = configuration
   }
 
   isKnownLanguage(): Boolean {
@@ -112,8 +117,7 @@ class Switcher {
   }
 
   private configuration(section: string): string | undefined {
-    const configuration = vscode.workspace.getConfiguration('TestSwitcher')
-    return configuration.get(section)
+    return this.#configuration.get(section)
   }
 }
 
@@ -163,7 +167,7 @@ export function switchBetweenImplementationAndTest() {
   }
   const languageId: string = activeEditor.document.languageId
   const currentFile: string = activeEditor.document.fileName
-  const switcher = new Switcher(languageId, currentFile)
+  const switcher = new Switcher(languageId, currentFile, vscode.workspace.getConfiguration('Test Switcher'))
 
   if (!switcher.isKnownLanguage()) {
     vscode.window.showErrorMessage(
