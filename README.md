@@ -7,7 +7,7 @@ Switch between implementation and test files with Ctrl+`.
 This is a VS Code extension that allows you to quickly switch between an implementation file
 and its related test file - and vice versa.
 
-Supported languages:
+Default supported languages:
 
 - Elixir
 - Ruby
