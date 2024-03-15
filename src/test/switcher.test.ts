@@ -1,7 +1,7 @@
 import {Switcher} from '../switcher'
 import expect from 'expect.js'
 import * as vscode from 'vscode'
-import {before, beforeEach} from 'mocha'
+import {before, beforeEach, it} from 'mocha'
 
 type Overrides = {[key: string]: any}
 
@@ -40,14 +40,14 @@ const getConfiguration = () => vscode.workspace.getConfiguration('TestSwitcher')
 suite('Switcher', () => {
   suite('isKnownLanguage', () => {
     suite('when the language is not known', () => {
-      test('is false', () => {
+      it('is false', () => {
         const switcher = new Switcher('cobol', 'path', getConfiguration())
         expect(switcher.isKnownLanguage()).to.not.be.ok()
       })
     })
 
     suite('with configuration overriddes', () => {
-      test('are used', () => {
+      it('uses the configuration', () => {
         const switcher = new Switcher(
           'cobol',
           'path',
@@ -72,7 +72,7 @@ suite('Switcher', () => {
       before(() => {
         languageId = 'cobol'
       })
-      test('raises an error', () => {
+      it('raises an error', () => {
         expect(() => switcher.other()).to.throwError(/cobol is not/)
       })
     })
@@ -87,7 +87,7 @@ suite('Switcher', () => {
           path = '/home/user/foo/my_project/lib/some/path.ex'
         })
 
-        test('returns the test path', () => {
+        it('returns the test path', () => {
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/test/some/path_test.exs'
           )
@@ -99,7 +99,7 @@ suite('Switcher', () => {
           path = '/home/user/foo/my_project/test/some/path_test.exs'
         })
 
-        test('returns the implementation path', () => {
+        it('returns the implementation path', () => {
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/lib/some/path.ex'
           )
@@ -117,7 +117,7 @@ suite('Switcher', () => {
           path = '/home/user/foo/my_project/lib/some/path.rb'
         })
 
-        test('returns the test path', () => {
+        it('returns the test path', () => {
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/test/some/path_test.rb'
           )
@@ -129,7 +129,7 @@ suite('Switcher', () => {
           path = '/home/user/foo/my_project/test/some/path_test.rb'
         })
 
-        test('returns the implementation path', () => {
+        it('returns the implementation path', () => {
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/lib/some/path.rb'
           )
@@ -147,7 +147,7 @@ suite('Switcher', () => {
           path = '/home/user/foo/my_project/lib/some/path.ts'
         })
 
-        test('returns the test path', () => {
+        it('returns the test path', () => {
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/lib/some/test/path.test.ts'
           )
@@ -159,7 +159,7 @@ suite('Switcher', () => {
           path = '/home/user/foo/my_project/lib/some/test/path.test.ts'
         })
 
-        test('returns the implementation path', () => {
+        it('returns the implementation path', () => {
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/lib/some/path.ts'
           )
@@ -186,7 +186,7 @@ suite('Switcher', () => {
           path = 'implementation path'
         })
 
-        test('returns the test path', () => {
+        it('returns the test path', () => {
           expect(switcher.other()).to.be.equal('test path')
         })
       })
@@ -196,7 +196,7 @@ suite('Switcher', () => {
           path = 'test path'
         })
 
-        test('returns the implementation path', () => {
+        it('returns the implementation path', () => {
           expect(switcher.other()).to.be.equal('implementation path')
         })
       })
