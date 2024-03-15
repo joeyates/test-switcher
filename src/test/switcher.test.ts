@@ -27,7 +27,6 @@ class ConfigurationMock {
   }
 }
 
-
 const override = (overrides: Overrides) => {
   return new ConfigurationMock({
     configuration: configuration(),
@@ -147,6 +146,34 @@ suite('Switcher', () => {
             '/home/user/foo/my_project/lib/some/path.ts'
           )
         })
+      })
+    })
+
+    suite('with configuration overriddes', () => {
+      const overrides = {
+        knownLanguages: ['perl'],
+        'perl.implementationMatcher': 'implementation path',
+        'perl.implementationReplacer': 'test path',
+        'perl.testMatcher': 'test path',
+        'perl.testReplacer': 'implementation path'
+      }
+
+      test('converts implementation paths to test paths', () => {
+        const switcher = new Switcher(
+          'perl',
+          'implementation path',
+          override(overrides)
+        )
+        expect(switcher.other()).to.be.equal('test path')
+      })
+
+      test('converts test paths to implementation paths', () => {
+        const switcher = new Switcher(
+          'perl',
+          'test path',
+          override(overrides)
+        )
+        expect(switcher.other()).to.be.equal('implementation path')
       })
     })
   })
