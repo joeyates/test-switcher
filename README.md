@@ -1,6 +1,6 @@
 # test-switcher
 
-Switch between implementation and test files.
+Switch between implementation and test files with Ctrl+`.
 
 # Features
 
