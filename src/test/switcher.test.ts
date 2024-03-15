@@ -1,6 +1,7 @@
 import {Switcher} from '../switcher'
 import expect from 'expect.js'
 import * as vscode from 'vscode'
+import {before, beforeEach} from 'mocha'
 
 type Overrides = {[key: string]: any}
 
@@ -29,18 +30,18 @@ class ConfigurationMock {
 
 const override = (overrides: Overrides) => {
   return new ConfigurationMock({
-    configuration: configuration(),
+    configuration: getConfiguration(),
     overrides
   }) as unknown as vscode.WorkspaceConfiguration
 }
 
-const configuration = () => vscode.workspace.getConfiguration('TestSwitcher')
+const getConfiguration = () => vscode.workspace.getConfiguration('TestSwitcher')
 
 suite('Switcher', () => {
   suite('isKnownLanguage', () => {
     suite('when the language is not known', () => {
       test('is false', () => {
-        const switcher = new Switcher('cobol', 'path', configuration())
+        const switcher = new Switcher('cobol', 'path', getConfiguration())
         expect(switcher.isKnownLanguage()).to.not.be.ok()
       })
     })
@@ -58,21 +59,35 @@ suite('Switcher', () => {
   })
 
   suite('other', () => {
+    let languageId: string
+    let path: string
+    let configuration: any = getConfiguration()
+    let switcher: Switcher
+
+    beforeEach(() => {
+      switcher = new Switcher(languageId, path, configuration)
+    })
+
     suite('when the language is not known', () => {
+      before(() => {
+        languageId = 'cobol'
+      })
       test('raises an error', () => {
-        const switcher = new Switcher('cobol', 'path', configuration())
         expect(() => switcher.other()).to.throwError(/cobol is not/)
       })
     })
 
     suite('with Elixir', () => {
+      before(() => {
+        languageId = 'elixir'
+      })
+
       suite('when the path is an implementation file', () => {
+        before(() => {
+          path = '/home/user/foo/my_project/lib/some/path.ex'
+        })
+
         test('returns the test path', () => {
-          const switcher = new Switcher(
-            'elixir',
-            '/home/user/foo/my_project/lib/some/path.ex',
-            configuration()
-          )
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/test/some/path_test.exs'
           )
@@ -80,12 +95,11 @@ suite('Switcher', () => {
       })
 
       suite('when the path is a test file', () => {
+        before(() => {
+          path = '/home/user/foo/my_project/test/some/path_test.exs'
+        })
+
         test('returns the implementation path', () => {
-          const switcher = new Switcher(
-            'elixir',
-            '/home/user/foo/my_project/test/some/path_test.exs',
-            configuration()
-          )
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/lib/some/path.ex'
           )
@@ -94,13 +108,16 @@ suite('Switcher', () => {
     })
 
     suite('with Ruby', () => {
+      before(() => {
+        languageId = 'ruby'
+      })
+
       suite('when the path is an implementation file', () => {
+        before(() => {
+          path = '/home/user/foo/my_project/lib/some/path.rb'
+        })
+
         test('returns the test path', () => {
-          const switcher = new Switcher(
-            'ruby',
-            '/home/user/foo/my_project/lib/some/path.rb',
-            configuration()
-          )
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/test/some/path_test.rb'
           )
@@ -108,12 +125,11 @@ suite('Switcher', () => {
       })
 
       suite('when the path is a test file', () => {
+        before(() => {
+          path = '/home/user/foo/my_project/test/some/path_test.rb'
+        })
+
         test('returns the implementation path', () => {
-          const switcher = new Switcher(
-            'ruby',
-            '/home/user/foo/my_project/test/some/path_test.rb',
-            configuration()
-          )
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/lib/some/path.rb'
           )
@@ -122,13 +138,16 @@ suite('Switcher', () => {
     })
 
     suite('with Typescript', () => {
+      before(() => {
+        languageId = 'typescript'
+      })
+
       suite('when the path is an implementation file', () => {
+        before(() => {
+          path = '/home/user/foo/my_project/lib/some/path.ts'
+        })
+
         test('returns the test path', () => {
-          const switcher = new Switcher(
-            'typescript',
-            '/home/user/foo/my_project/lib/some/path.ts',
-            configuration()
-          )
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/lib/some/test/path.test.ts'
           )
@@ -136,12 +155,11 @@ suite('Switcher', () => {
       })
 
       suite('when the path is a test file', () => {
+        before(() => {
+          path = '/home/user/foo/my_project/lib/some/test/path.test.ts'
+        })
+
         test('returns the implementation path', () => {
-          const switcher = new Switcher(
-            'typescript',
-            '/home/user/foo/my_project/lib/some/test/path.test.ts',
-            configuration()
-          )
           expect(switcher.other()).to.equal(
             '/home/user/foo/my_project/lib/some/path.ts'
           )
@@ -158,22 +176,29 @@ suite('Switcher', () => {
         'perl.testReplacer': 'implementation path'
       }
 
-      test('converts implementation paths to test paths', () => {
-        const switcher = new Switcher(
-          'perl',
-          'implementation path',
-          override(overrides)
-        )
-        expect(switcher.other()).to.be.equal('test path')
+      before(() => {
+        languageId = 'perl'
+        configuration = override(overrides)
       })
 
-      test('converts test paths to implementation paths', () => {
-        const switcher = new Switcher(
-          'perl',
-          'test path',
-          override(overrides)
-        )
-        expect(switcher.other()).to.be.equal('implementation path')
+      suite('when the path is an implementation file', () => {
+        before(() => {
+          path = 'implementation path'
+        })
+
+        test('returns the test path', () => {
+          expect(switcher.other()).to.be.equal('test path')
+        })
+      })
+
+      suite('when the path is a test file', () => {
+        before(() => {
+          path = 'test path'
+        })
+
+        test('returns the implementation path', () => {
+          expect(switcher.other()).to.be.equal('implementation path')
+        })
       })
     })
   })
