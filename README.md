@@ -37,7 +37,7 @@ For each language there is a further set of 4 settings:
 - `TestSwitcher.${LANGAUGE}.testReplacer`: a replacement string (which uses the captures) to
   construct the path to the implementation file.
 
-Each of these sets of 4 settings provide a mapping between test and implementation files for a language.
+Each of these sets of 4 settings provides a mapping between test and implementation files for a language.
 
 In a project's root folder, you can create a directory `.vscode` with a `settings.json` file
 with overrides of these settingsi (see below).
