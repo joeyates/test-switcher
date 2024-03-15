@@ -167,7 +167,7 @@ export function switchBetweenImplementationAndTest() {
   }
   const languageId: string = activeEditor.document.languageId
   const currentFile: string = activeEditor.document.fileName
-  const switcher = new Switcher(languageId, currentFile, vscode.workspace.getConfiguration('Test Switcher'))
+  const switcher = new Switcher(languageId, currentFile, vscode.workspace.getConfiguration('TestSwitcher'))
 
   if (!switcher.isKnownLanguage()) {
     vscode.window.showErrorMessage(
